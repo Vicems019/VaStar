@@ -1,6 +1,7 @@
 import pygame
 
 from ui.popup import Popup
+from ui.colors import Colors
 
 WIDTH = 1280
 HEIGHT = 720
@@ -24,7 +25,7 @@ class GameScreen:
     
     def show(self):
         
-        self.screen.fill((200, 200, 200))
+        self.screen.fill(Colors.GRAY_LIGHT)
         dim_text = self.font_default.render(f"Dimensiones: {self.dim}x{self.dim}", True, (0,0,0))
 
         self.dibujar_mapa()
@@ -35,11 +36,11 @@ class GameScreen:
 
         mouse_pos = pygame.mouse.get_pos()
 
-        button_color = (0, 90, 160) if info_button.collidepoint(mouse_pos) else (0, 120, 200)
+        button_color = Colors.BLUE_DARK if info_button.collidepoint(mouse_pos) else Colors.BLUE
 
         pygame.draw.rect(self.screen, button_color, info_button, border_radius=25)
-        info_text_button = self.font_default.render("?", True, (255, 255, 255))
-        self.screen.blit(info_text_button, ((WIDTH-67), 20))
+        info_text_button = self.font_default.render("?", True, Colors.WHITE)
+        self.screen.blit(info_text_button, ((WIDTH-69), 22))
 
         if self.popup.active:
             self.popup.pop()
@@ -73,4 +74,4 @@ class GameScreen:
                     tam_celdas                
                 )
 
-                pygame.draw.rect(self.screen, (0, 0, 0), rect, 1)  # borde
+                pygame.draw.rect(self.screen, Colors.BLACK, rect, 1)  # borde

@@ -1,5 +1,6 @@
 import pygame
 
+from ui.colors import Colors
 
 WIDTH = 1280
 HEIGHT = 720
@@ -38,24 +39,24 @@ class MenuScreen:
             if event.key == pygame.K_BACKSPACE:
                 self.dim_text = self.dim_text[:-1]                
             elif event.unicode.isdigit():
-                if len(self.dim_text) < 4:
+                if len(self.dim_text) < 2:
                     self.dim_text += event.unicode
         return None, None
 
     def show(self):
-        self.screen.fill((200, 200, 200))
+        self.screen.fill(Colors.GRAY_LIGHT)
 
         text_main = self.font_title.render("Bienvenido a VaStar*", True, (0, 0, 0))
         self.screen.blit(text_main, (130, 100))
 
-        input_color = (120, 120, 120) if self.active else (90, 90, 90)
+        input_color = Colors.GRAY_DARK if self.active else Colors.GRAY
 
         pygame.draw.rect(self.screen, input_color, size_input, border_radius=10)
         surface_text = self.font_default.render(self.dim_text, True, (0, 180, 180))
         self.screen.blit(surface_text, (size_input.x + 10, size_input.y + 5))
 
         pygame.draw.rect(self.screen, (0, 120, 200), size_button, border_radius=5)
-        button_text = self.font_default.render("OK", True, (255, 255, 255))
+        button_text = self.font_default.render("OK", True, Colors.WHITE)
         self.screen.blit(button_text, (size_button.x + 20, size_button.y + 5))
 
         self.set_dimensiones(self.dim_text)
@@ -69,6 +70,6 @@ class MenuScreen:
 
         x = 320 if value == "" else 240
 
-        message_surface = self.font_default.render(mensaje, True, (0, 0, 0))
+        message_surface = self.font_default.render(mensaje, True, Colors.BLACK)
 
         self.screen.blit(message_surface, (x, 280))
