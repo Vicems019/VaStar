@@ -24,6 +24,9 @@ size_button = pygame.Rect((WIDTH+60)//2, HEIGHT//2, 100, 40)
 active = False
 current_screen = "menu"
 dim = 0
+info_button = pygame.Rect((WIDTH-80), 10, 50, 50)
+
+
 
 def set_dimensiones(value):
     mensaje = (
@@ -32,12 +35,7 @@ def set_dimensiones(value):
         else f"Dimensiones del mapa {value}x{value}"
     )
 
-    if len(value) == 0:
-        x = 320
-    elif len(value) <= 2:
-        x = 240
-    else:
-        x = 190
+    x = 320 if value == "" else 240
 
     message_surface = font_default.render(mensaje, True, (0, 0, 0))
 
@@ -45,11 +43,11 @@ def set_dimensiones(value):
         
 
 def dibujar_mapa(dim):
-    mapa = 600
+    mapa = 620
     tam_celdas = mapa // dim
 
-    coord_x = 60
-    coord_y = 100
+    coord_x = 40
+    coord_y = 80
 
     for row in range(dim):
         for col in range(dim):
@@ -73,7 +71,6 @@ while running:
 
         # Eventos del menu
         if current_screen == "menu":
-
             
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if size_input.collidepoint(event.pos):
@@ -96,7 +93,20 @@ while running:
                     if len(size_text) < 4:
                         size_text += event.unicode
         elif current_screen == "game":
-            pass
+            
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if size_input.collidepoint(event.pos):
+                    active = True
+                else:
+                    active = False
+
+                if size_button.collidepoint(event.pos):
+                    try:
+                        if int(size_text) > 0:
+                            current_screen = "game"
+                            dim = int(size_text)
+                    except:
+                        pass
 
     screen.fill((200, 200, 200))
 
@@ -127,7 +137,15 @@ while running:
 
         # TODO Boton de ayuda para explicar lo que hace cada pintura
 
-        screen.blit(dim_text, (40, 40))
+        screen.blit(dim_text, (20, 30))
+
+        mouse_pos = pygame.mouse.get_pos()
+
+        button_color = (0, 90, 160) if info_button.collidepoint(mouse_pos) else (0, 120, 200)
+
+        pygame.draw.rect(screen, button_color, info_button, border_radius=25)
+        info_text_button = font_default.render("?", True, (255, 255, 255))
+        screen.blit(info_text_button, ((WIDTH-70), 20))
 
     pygame.display.flip() # Actualizar cambio de pantallas
 
