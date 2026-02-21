@@ -30,17 +30,26 @@ class GameScreen:
 
         self.dibujar_mapa()
 
-        # TODO Boton de ayuda para explicar lo que hace cada pintura
-
         self.screen.blit(dim_text, (20, 30))
 
         mouse_pos = pygame.mouse.get_pos()
 
+        # Boton de información
         button_color = Colors.BLUE_DARK if info_button.collidepoint(mouse_pos) else Colors.BLUE
-
         pygame.draw.rect(self.screen, button_color, info_button, border_radius=25)
         info_text_button = self.font_default.render("?", True, Colors.WHITE)
         self.screen.blit(info_text_button, ((WIDTH-69), 22))
+
+
+        # TODO los 4 botones para pintar el juego
+
+        for i in range(4):
+            x = WIDTH - 80
+            y = 80 + i*60
+            pygame.draw.rect(self.screen, Colors.YELLOW, pygame.Rect(x, y, 50, 50), border_radius=10)
+            
+
+        # TODO boton para ejecutar el algoritmo
 
         if self.popup.active:
             self.popup.pop()
