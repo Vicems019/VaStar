@@ -37,7 +37,7 @@ while running:
 
         if next_screen:
             current_screen = game if next_screen == "game" else menu
-            current_screen.dim = elements[0] # Al cambiar pantalla pasamos las dimensiones
+            current_screen.set_dim(elements[0]) # Al cambiar pantalla pasamos las dimensiones
 
     current_screen.show()
 
