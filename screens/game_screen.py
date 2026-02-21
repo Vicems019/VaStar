@@ -2,6 +2,7 @@ import pygame
 
 from ui.popup import Popup
 from ui.colors import Colors
+from core.astar import AStar
 
 WIDTH = 1280
 HEIGHT = 720
@@ -10,6 +11,12 @@ info_button = pygame.Rect((WIDTH-80), 10, 50, 50)
 info_rect = pygame.Rect(0, 0, 500, 300)
 info_rect.center = (WIDTH//2, HEIGHT//2)
 close_button = pygame.Rect(info_rect.right - 40, info_rect.y + 10, 30, 30)
+
+execute_button = pygame.Rect((WIDTH-540), 630, 480, 60)
+
+selected_button = None
+
+matriz_astar = []
 
 class GameScreen:
 
@@ -41,15 +48,18 @@ class GameScreen:
         self.screen.blit(info_text_button, ((WIDTH-69), 22))
 
 
-        # TODO los 4 botones para pintar el juego
+        # TODO los 3 botones para pintar el juego
 
-        for i in range(4):
-            x = WIDTH - 80
-            y = 80 + i*60
-            pygame.draw.rect(self.screen, Colors.YELLOW, pygame.Rect(x, y, 50, 50), border_radius=10)
-            
+        pygame.draw.rect(self.screen, Colors.BLUE, pygame.Rect(WIDTH - 500, 160, 160, 160), border_radius=10)
+        pygame.draw.rect(self.screen, Colors.GREEN, pygame.Rect(WIDTH - 300, 160, 160, 160), border_radius=10)
+        pygame.draw.rect(self.screen, Colors.GRAY, pygame.Rect(WIDTH - 400, 360, 160, 160), border_radius=10)
 
         # TODO boton para ejecutar el algoritmo
+
+        execute_button_color = Colors.BLUE_DARK if execute_button.collidepoint(mouse_pos) else Colors.BLUE
+        pygame.draw.rect(self.screen, execute_button_color, execute_button, border_radius=10)
+        execute_text = self.font_default.render("Ejecutar", True, Colors.WHITE)
+        self.screen.blit(execute_text, (execute_button.centerx - 110, execute_button.centery - 15))
 
         if self.popup.active:
             self.popup.pop()
@@ -62,6 +72,11 @@ class GameScreen:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if info_button.collidepoint(event.pos):
                 self.popup.active = True
+
+            if execute_button.collidepoint(event.pos):
+                # TODO ejecutar el algoritmo A* y mostrar el resultado
+                astar = AStar(self.dim, matriz_astar)
+                astar.ejecutar()
         return None, None
 
     
