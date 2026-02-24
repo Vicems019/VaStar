@@ -26,3 +26,7 @@ class Colors:
     # YELLOWS
     YELLOW_LIGHT = (255, 240, 140)
     YELLOW = (240, 200, 60)
+
+    # ORANGES
+    ORANGE_LIGHT = (255, 180, 100)
+    ORANGE = (255, 140, 30)

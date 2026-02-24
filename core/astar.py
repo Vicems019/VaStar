@@ -49,8 +49,6 @@ class Astar:
                 camino = []
                 nodo = nodo_actual
                 while nodo is not None:
-                    print(nodo)
-                    print(type(nodo))
                     camino.append(nodo.position)
                     nodo = nodo.parent
                 return camino[::-1]  # Devolvemos el camino desde el nodo inicial al nodo objetivo
@@ -79,13 +77,19 @@ class Astar:
 
                 # Calculamos los valores de g, h y f para el hijo
                 hijo.g = nodo_actual.g + 1
-                hijo.h = ((hijo.position[0] - nodo_final.position[0]) ** 2) + ((hijo.position[1] - nodo_final.position[1]) ** 2) # Heurística de Manhattan
+                hijo.h = abs(hijo.position[0] - nodo_final.position[0]) + \
+                    abs(hijo.position[1] - nodo_final.position[1]) # Heurística de Manhattan
                 hijo.f = hijo.g + hijo.h
 
                 # Si el hijo ya está en la lista abierta con un valor de g menor, lo ignoramos
-                for nodo_abierto in lista_abierta:
-                    if hijo == nodo_abierto and hijo.g > nodo_abierto.g:
-                        continue
+                skip = False
 
+                for nodo_abierto in lista_abierta:
+                    if hijo == nodo_abierto and hijo.g >= nodo_abierto.g:
+                        skip = True
+                        break
+                if skip:
+                    continue
+                
                 # Añadimos el hijo a la lista abierta
                 lista_abierta.append(hijo)
