@@ -43,6 +43,9 @@ class GameScreen:
         self.screen.fill(Colors.GRAY_LIGHT)
         dim_text = self.font_default.render(f"Dimensiones: {self.dim}x{self.dim}", True, (0,0,0))
 
+        # TODO crear botón para regresar al menú principal
+        back_button = pygame.Rect(20, 630, 160, 60)
+
         self.dibujar_mapa()
 
         self.screen.blit(dim_text, (20, 30))
@@ -92,8 +95,10 @@ class GameScreen:
                 # TODO ejecutar el algoritmo A* y mostrar el resultado
 
                 astar = Astar(self.dim, self.matriz_astar)
-                astar.ejecutar()
+                lista_astar = astar.ejecutar()
                 print("Ejecutando A*...") # TODO eliminar esta línea y mostrar el resultado en el mapa
+                self.dibujar_busqueda(lista_astar)
+
 
             if init_button.collidepoint(event.pos):
                 self.selected_button = "init"
@@ -198,3 +203,9 @@ class GameScreen:
 
                 pygame.draw.rect(self.screen, color, rect)  # resaltar celda
                 pygame.draw.rect(self.screen, Colors.BLACK, rect, 1)  # borde
+
+    def dibujar_busqueda(self, lista_astar):
+        print("Dibujando búsqueda...") # TODO eliminar esta línea y mostrar el resultado en el mapa
+        for x, y in lista_astar:
+            print(x, y)
+            
