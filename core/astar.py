@@ -7,8 +7,6 @@ class Astar:
         self.matriz = matriz
 
     def ejecutar(self):
-        print("MATRIZ OBTENIDA:\n\n", self.matriz)
-
         # Declaramos el nodo inicial y el nodo objetivo
         pos_init_x, pos_init_y = np.where(self.matriz == 1)
         pos_end_x, pos_end_y = np.where(self.matriz == 2)

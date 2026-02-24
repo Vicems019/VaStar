@@ -146,7 +146,9 @@ class GameScreen:
             button.draw(self.screen, mouse_pos)
 
         if self.popup.active:
-            self.popup.pop()
+            self.popup.info_pop()
+
+
 
     def handle_events(self, event):
         if self.popup.active:
@@ -183,6 +185,9 @@ class GameScreen:
                         self.matriz_astar[row][col] = -1
 
                 elif event.button == 3:
+                    if self.matriz_astar[row][col] == 3:
+                        return None, None
+                    
                     self.matriz_astar[row][col] = 0
 
                     # Limpiar posiciones guardadas si se borran
@@ -231,7 +236,6 @@ class GameScreen:
         # Popeamos los últimos elementos de la lista abierta y cerrada para mostrar el proceso de búsqueda
         lista_astar.pop(0)
         lista_astar.pop(-1)
-        print("Lista A*:", lista_astar)
         for x, y in lista_astar:
             self.matriz_astar[x][y] = 3  # Marcar el camino encontrado (puedes usar otro valor para diferenciarlo)
 

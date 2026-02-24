@@ -35,7 +35,7 @@ class Popup:
             if self.close_button.collidepoint(event.pos):
                 self.active = False
 
-    def pop(self):
+    def info_pop(self):
 
         mouse_pos = pygame.mouse.get_pos()
         close_color = Colors.RED_DARK if self.close_button.collidepoint(mouse_pos) else Colors.RED
@@ -78,3 +78,31 @@ class Popup:
         x_text = self.font_little.render("X", True, Colors.WHITE)
         x_rect = x_text.get_rect(center=self.close_button.center)
         self.screen.blit(x_text, x_rect)
+
+
+    def error_pop(self):
+        overlay = pygame.Surface(self.screen.screen.get_size())
+        overlay.set_alpha(150)
+        overlay.fill(Colors.BLACK)
+        self.screen.screen.blit(overlay, (0, 0))
+        
+        mouse_pos = pygame.mouse.get_pos()
+        close_color = Colors.RED_DARK if self.close_button.collidepoint(mouse_pos) else Colors.RED
+
+        # Cuadrado Paleta
+        pygame.draw.rect(self.screen.screen, Colors.WHITE, self.rect)
+        pygame.draw.rect(self.screen.screen, Colors.BLACK, self.rect, 2)
+        pygame.draw.rect(self.screen.screen, close_color, self.close_button)
+
+        # Titulo
+        titulo_error = self.font_title.render("Error", True, Colors.BLACK)
+        self.screen.screen.blit(titulo_error, (self.rect.centerx - titulo_error.get_width() // 2, self.rect.y + 20))
+
+        # Mensaje
+        msg_error = self.font_default.render("No has dibujado correctamente el mapa")
+        self.screen.screen.blit(msg_error, (self.rect.left + 20, self.rect.y + 40))
+
+        # Boton cerrar (X)
+        x_text = self.font_little.render("X", True, Colors.WHITE)
+        x_rect = x_text.get_rect(center=self.close_button.center)
+        self.screen.screen.blit(x_text, x_rect)
