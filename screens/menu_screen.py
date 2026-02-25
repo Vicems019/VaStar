@@ -1,6 +1,7 @@
 import pygame
 
 from ui.colors import Colors
+from ui.popup import Popup
 
 WIDTH = 1280
 HEIGHT = 720
@@ -19,21 +20,26 @@ class MenuScreen:
 
         self.dim_text = ""
         self.active = False
+        self.popup = Popup(screen)
 
     def handle_events(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
-                if size_input.collidepoint(event.pos):
-                    self.active = True
-                else:
-                    self.active = False
+            if size_input.collidepoint(event.pos):
+                self.active = True
+            else:
+                self.active = False
 
                 if size_button.collidepoint(event.pos):
                     try:
-                        if int(self.dim_text) > 0:
+                        if int(self.dim_text) > 2:
                             dim = int(self.dim_text)
                             return ("game", [dim])
-                    except:
-                        pass
+                        else:
+                            raise ValueError("Dimensiones inválidas")
+                    except ValueError:
+                        self.popup.error_active = True
+            if self.popup.error_active:
+                self.popup.handle_events(event)
 
         if event.type == pygame.KEYDOWN and self.active:
             if event.key == pygame.K_BACKSPACE:
@@ -60,6 +66,9 @@ class MenuScreen:
         self.screen.blit(button_text, (size_button.x + 20, size_button.y + 5))
 
         self.set_dimensiones(self.dim_text)
+
+        if self.popup.error_active:
+            self.popup.error_pop("Dimensiones inválidas. Debe ser mayor a 3.")
 
     def set_dimensiones(self, value):
         mensaje = (

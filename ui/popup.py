@@ -8,15 +8,16 @@ class Popup:
 
     def __init__(self, screen):
         self.screen = screen
-        self.active = False
+        self.info_active = False
+        self.error_active = False
         self.font_little = pygame.font.Font("./assets/PressStart2P-Regular.ttf", 20)
         self.font_default = pygame.font.Font("./assets/PressStart2P-Regular.ttf", 32)
         self.font_title = pygame.font.Font("./assets/PressStart2P-Regular.ttf", 52)
 
-        self.rect = pygame.Rect((WIDTH-400)//2, (HEIGHT-600)//2, 580, 500)
+        self.rect = pygame.Rect((WIDTH)//3, (HEIGHT-600)//2, 800, 500)
 
         self.close_button = pygame.Rect(
-            self.rect.right - 35,
+            self.rect.right - 75,
             self.rect.y + 10,
             30,
             30
@@ -33,17 +34,20 @@ class Popup:
     def handle_events(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.close_button.collidepoint(event.pos):
-                self.active = False
+                self.info_active = False
+                self.error_active = False
 
     def info_pop(self):
-
-        mouse_pos = pygame.mouse.get_pos()
-        close_color = Colors.RED_DARK if self.close_button.collidepoint(mouse_pos) else Colors.RED
 
         overlay = pygame.Surface(self.screen.get_size())
         overlay.set_alpha(150)
         overlay.fill(Colors.BLACK)
         self.screen.blit(overlay, (0, 0))
+
+        mouse_pos = pygame.mouse.get_pos()
+        close_color = Colors.RED_DARK if self.close_button.collidepoint(mouse_pos) else Colors.RED
+
+        self.rect = pygame.Rect(200, (HEIGHT-600)//2, 1000, 500)
 
         pygame.draw.rect(self.screen, Colors.WHITE, self.rect)
         pygame.draw.rect(self.screen, Colors.BLACK, self.rect, 2)
@@ -75,34 +79,41 @@ class Popup:
         info_title = self.font_default.render("Información", True, Colors.BLACK)
         self.screen.blit(info_title, (self.rect.left+20, self.rect.top+20))
 
+        texto_izq = self.font_little.render("Click izquierdo = Colocar", True, Colors.BLACK)
+        texto_der = self.font_little.render("Click derecho = Eliminar", True, Colors.BLACK)
+
+        self.screen.blit(texto_izq, (self.rect.right - 520, self.rect.top + 120))
+        self.screen.blit(texto_der, (self.rect.right - 520, self.rect.top + 200))
+
         x_text = self.font_little.render("X", True, Colors.WHITE)
         x_rect = x_text.get_rect(center=self.close_button.center)
         self.screen.blit(x_text, x_rect)
 
 
-    def error_pop(self):
-        overlay = pygame.Surface(self.screen.screen.get_size())
+    def error_pop(self, message):
+        overlay = pygame.Surface(self.screen.get_size())
         overlay.set_alpha(150)
         overlay.fill(Colors.BLACK)
-        self.screen.screen.blit(overlay, (0, 0))
+        self.screen.blit(overlay, (0, 0))
         
         mouse_pos = pygame.mouse.get_pos()
         close_color = Colors.RED_DARK if self.close_button.collidepoint(mouse_pos) else Colors.RED
 
+        self.rect = pygame.Rect(200, (HEIGHT-600)//2, 1000, 300)
+
         # Cuadrado Paleta
-        pygame.draw.rect(self.screen.screen, Colors.WHITE, self.rect)
-        pygame.draw.rect(self.screen.screen, Colors.BLACK, self.rect, 2)
-        pygame.draw.rect(self.screen.screen, close_color, self.close_button)
+        pygame.draw.rect(self.screen, Colors.WHITE, self.rect)
+        pygame.draw.rect(self.screen, Colors.BLACK, self.rect, 2)
+        pygame.draw.rect(self.screen, close_color, self.close_button)
 
         # Titulo
         titulo_error = self.font_title.render("Error", True, Colors.BLACK)
-        self.screen.screen.blit(titulo_error, (self.rect.centerx - titulo_error.get_width() // 2, self.rect.y + 20))
-
+        self.screen.blit(titulo_error, (self.rect.centerx - titulo_error.get_width() // 2, self.rect.y + 20))
         # Mensaje
-        msg_error = self.font_default.render("No has dibujado correctamente el mapa")
-        self.screen.screen.blit(msg_error, (self.rect.left + 20, self.rect.y + 40))
+        msg_error = self.font_little.render(message, True, Colors.BLACK)
+        self.screen.blit(msg_error, (self.rect.left + 20, self.rect.y + 100))
 
         # Boton cerrar (X)
         x_text = self.font_little.render("X", True, Colors.WHITE)
         x_rect = x_text.get_rect(center=self.close_button.center)
-        self.screen.screen.blit(x_text, x_rect)
+        self.screen.blit(x_text, x_rect)

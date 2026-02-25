@@ -126,6 +126,12 @@ class GameScreen:
         self.dispatcher.register(self.goal_button, self.ui_actions.on_select_goal)
         self.dispatcher.register(self.obstacle_button, self.ui_actions.on_select_obstacle)
 
+        # ANIMACION
+        self.lista_animacion = []
+        self.animando = False
+        self.timer_animacion = 0
+        self.velocidad_animacion = 50 # ms por cada paso
+
     def set_dim(self, dim):
         self.dim = dim
         self.matriz_astar = np.zeros((self.dim, self.dim), dtype=int)
@@ -145,13 +151,20 @@ class GameScreen:
         for button in self.buttons:
             button.draw(self.screen, mouse_pos)
 
-        if self.popup.active:
+        if self.popup.info_active:
             self.popup.info_pop()
+
+        if self.popup.error_active:
+            self.popup.error_pop("No has dibujado correctamente el mapa")
+
+        self.animar_busqueda()
+
+        self.manejar_mouse_mantenido()
 
 
 
     def handle_events(self, event):
-        if self.popup.active:
+        if self.popup.info_active or self.popup.error_active:
             self.popup.handle_events(event)
             return None, None
         
@@ -199,8 +212,6 @@ class GameScreen:
 
         return None, None
 
-    
-
     def dibujar_mapa(self):
         mapa = 620
         tam_celdas = mapa // self.dim
@@ -233,11 +244,14 @@ class GameScreen:
 
 
     def dibujar_busqueda(self, lista_astar):
-        # Popeamos los últimos elementos de la lista abierta y cerrada para mostrar el proceso de búsqueda
-        lista_astar.pop(0)
-        lista_astar.pop(-1)
-        for x, y in lista_astar:
-            self.matriz_astar[x][y] = 3  # Marcar el camino encontrado (puedes usar otro valor para diferenciarlo)
+
+            # Popeamos los últimos elementos de la lista abierta y cerrada para mostrar el proceso de búsqueda
+            lista_astar.pop(0)
+            lista_astar.pop(-1)
+            for x, y in lista_astar:
+                self.matriz_astar[x][y] = 3  # Marcar el camino encontrado (puedes usar otro valor para diferenciarlo)
+
+
 
     def get_celda(self, pos):
         x, y = pos
@@ -260,3 +274,39 @@ class GameScreen:
     
     def get_tam_celda(self):
         return self.mapa_size // self.dim
+    
+    def animar_busqueda(self):
+        if self.animando and self.lista_animacion:
+
+            ahora = pygame.time.get_ticks()
+
+            if ahora - self.timer_animacion > self.velocidad_animacion:
+
+                x, y = self.lista_animacion.pop(0)
+                self.matriz_astar[x][y] = 3
+
+                self.timer_animacion = ahora
+
+        elif not self.lista_animacion:
+            self.animando = False
+
+    def manejar_mouse_mantenido(self):
+        botones = pygame.mouse.get_pressed()
+
+        if botones[0]:  # Si se mantiene presionado el botón izquierdo del mouse
+            celda = self.get_celda(pygame.mouse.get_pos())
+
+            if celda:
+                row, col = celda
+
+                if self.selected_button == "obstacle":
+                    self.matriz_astar[row][col] = -1
+        
+        if botones[2]:
+            celda = self.get_celda(pygame.mouse.get_pos())
+
+            if celda:
+                row, col = celda
+
+                if self.matriz_astar[row][col] not in (1, 2):  
+                    self.matriz_astar[row][col] = 0
