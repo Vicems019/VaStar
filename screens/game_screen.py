@@ -112,7 +112,8 @@ class GameScreen:
             1: Colors.BLUE,         # inicio
             2: Colors.GREEN,        # meta
             3: Colors.YELLOW,       # camino
-            4: Colors.RED,          # explorada
+            4: Colors.ORANGE,       # explorada
+            5: Colors.RED,          # explorada
             -1: Colors.GRAY         # obstáculo
         }
 
