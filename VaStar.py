@@ -1,6 +1,6 @@
 import pygame
 import sys
-
+import numpy as np
 from screens.menu_screen import MenuScreen
 from screens.game_screen import GameScreen
 
@@ -24,10 +24,8 @@ game = GameScreen(screen)
 
 current_screen = menu
 running = True
-
 while running:
     dt = clock.tick(60)
-
     for event in pygame.event.get():
 
         if event.type == pygame.QUIT:
@@ -39,7 +37,7 @@ while running:
             current_screen = game if next_screen == "game" else menu
             if next_screen == "game":
                 current_screen.set_dim(elements[0]) # Al cambiar pantalla pasamos las dimensiones
-
+    
     current_screen.show()
 
     pygame.display.flip()

@@ -1,6 +1,6 @@
 import pygame
-import numpy as np
 
+import numpy as np
 from ui.popup import Popup
 from ui.colors import Colors
 from ui.button import Button
@@ -112,6 +112,7 @@ class GameScreen:
             1: Colors.BLUE,         # inicio
             2: Colors.GREEN,        # meta
             3: Colors.YELLOW,       # camino
+            4: Colors.RED,          # explorada
             -1: Colors.GRAY         # obstáculo
         }
 
@@ -276,19 +277,45 @@ class GameScreen:
         return self.mapa_size // self.dim
     
     def animar_busqueda(self):
-        if self.animando and self.lista_animacion:
+        if self.animando and self.generador_astar:
 
             ahora = pygame.time.get_ticks()
 
             if ahora - self.timer_animacion > self.velocidad_animacion:
+                try:
+                    estado = next(self.generador_astar)
 
-                x, y = self.lista_animacion.pop(0)
-                self.matriz_astar[x][y] = 3
+                    if estado["tipo"] == "explorando":
+                        # Celda cerrada (ya evaluada) → gris, valor 4
+                        cx, cy = estado["cerrada"]
+                        if self.matriz_astar[cx][cy] not in (1, 2):
+                            self.matriz_astar[cx][cy] = 4
+
+                        # Celdas abiertas (candidatas) → azul claro, valor 5
+                        for ax, ay in estado["abierta"]:
+                            if self.matriz_astar[ax][ay] not in (1, 2, 4):
+                                self.matriz_astar[ax][ay] = 5
+
+                    elif estado["tipo"] == "camino":
+                        # Limpiamos exploración y pintamos solo el camino final
+                        self.matriz_astar[self.matriz_astar == 4] = 0
+                        self.matriz_astar[self.matriz_astar == 5] = 0
+                        for x, y in estado["camino"][1:-1]:
+                            self.lista_animacion.append((x, y))
+
+                except StopIteration:
+                    self.animando = False
+                    self.generador_astar = None
 
                 self.timer_animacion = ahora
 
-        elif not self.lista_animacion:
-            self.animando = False
+        # Segunda fase: animar el camino final celda a celda
+        if self.lista_animacion:
+            ahora = pygame.time.get_ticks()
+            if ahora - self.timer_animacion > self.velocidad_animacion // 2:  # más rápido
+                x, y = self.lista_animacion.pop(0)
+                self.matriz_astar[x][y] = 3
+                self.timer_animacion = ahora
 
     def manejar_mouse_mantenido(self):
         botones = pygame.mouse.get_pressed()
