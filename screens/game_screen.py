@@ -287,12 +287,12 @@ class GameScreen:
                     estado = next(self.generador_astar)
 
                     if estado["tipo"] == "explorando":
-                        # Celda cerrada (ya evaluada) → gris, valor 4
+                        # Celda cerrada (ya evaluada)
                         cx, cy = estado["cerrada"]
                         if self.matriz_astar[cx][cy] not in (1, 2):
                             self.matriz_astar[cx][cy] = 4
 
-                        # Celdas abiertas (candidatas) → azul claro, valor 5
+                        # Celdas abiertas (candidatas)
                         for ax, ay in estado["abierta"]:
                             if self.matriz_astar[ax][ay] not in (1, 2, 4):
                                 self.matriz_astar[ax][ay] = 5
@@ -336,5 +336,6 @@ class GameScreen:
             if celda:
                 row, col = celda
 
+                # Eliminamos elementos de la casilla seleccionada
                 if self.matriz_astar[row][col] not in (1, 2):  
                     self.matriz_astar[row][col] = 0

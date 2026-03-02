@@ -53,7 +53,6 @@ class Popup:
         pygame.draw.rect(self.screen, Colors.BLACK, self.rect, 2)
         pygame.draw.rect(self.screen, close_color, self.close_button)
 
-
         # Dibujar paleta de colores + info
 
         for i, (color, texto) in enumerate(self.paleta_items):

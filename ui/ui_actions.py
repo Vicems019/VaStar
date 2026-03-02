@@ -24,7 +24,7 @@ class UIActions:
             self.screen.animando = True
             self.screen.timer_animacion = pygame.time.get_ticks()
 
-
+    # TODO EL BOTON RESTART TIENE QUE PARAR LA EJECUCIÓN DEL CÓDIGO
     def on_restart_click(self):
         self.screen.matriz_astar = np.zeros((self.screen.dim, self.screen.dim), dtype=int)
         self.screen.pos_init = None

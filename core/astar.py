@@ -32,23 +32,24 @@ class Astar:
             lista_abierta.pop(indice_actual)
             lista_cerrada.append(nodo_actual)
 
-            # 👇 Emitimos el estado actual: celda explorada + open set actual
+            # Emitimos los estados que se encuentra la celda en ese momento: celda explorada, cerrada o abierta
             yield {
                 "tipo": "explorando",
                 "cerrada": nodo_actual.position,
                 "abierta": [n.position for n in lista_abierta]
             }
 
+            # Si el nodo actual es el objetivo, terminamos el algoritmo y mandamos el camino con su ruta
             if nodo_actual == nodo_final:
                 camino = []
                 nodo = nodo_actual
                 while nodo is not None:
                     camino.append(nodo.position)
                     nodo = nodo.parent
-                # 👇 Al final emitimos el camino
+                
                 yield {
                     "tipo": "camino",
-                    "camino": camino[::-1]
+                    "camino": camino[::-1] # Invertido
                 }
                 return
 
