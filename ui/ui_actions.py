@@ -26,9 +26,15 @@ class UIActions:
 
     # TODO EL BOTON RESTART TIENE QUE PARAR LA EJECUCIÓN DEL CÓDIGO
     def on_restart_click(self):
+        # Limpiamos la matriz y posiciones
         self.screen.matriz_astar = np.zeros((self.screen.dim, self.screen.dim), dtype=int)
         self.screen.pos_init = None
         self.screen.pos_goal = None
+        self.estado = None
+
+        # Detenemos la animación
+        self.screen.animando = False
+        self.screen.generador_astar = None
 
     def on_select_init(self):
         self.screen.selected_button = "init"

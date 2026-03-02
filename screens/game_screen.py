@@ -5,7 +5,7 @@ from ui.popup import Popup
 from ui.colors import Colors
 from ui.button import Button
 from ui.ui_actions import UIActions
-
+from core.errors import ReinicioError
 from core.astar import Astar
 from core.event_dispatcher import EventDispatcher
 
@@ -286,6 +286,8 @@ class GameScreen:
                 try:
                     estado = next(self.generador_astar)
 
+                    if self.generador_astar is None:
+                        raise ReinicioError("Animación reiniciada por el usuario")
                     if estado["tipo"] == "explorando":
                         # Celda cerrada (ya evaluada)
                         cx, cy = estado["cerrada"]
@@ -305,6 +307,11 @@ class GameScreen:
                             self.lista_animacion.append((x, y))
 
                 except StopIteration:
+                    self.animando = False
+                    self.generador_astar = None
+
+                except ReinicioError:
+                    # Detener animación y limpiar
                     self.animando = False
                     self.generador_astar = None
 
