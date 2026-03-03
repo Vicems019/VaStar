@@ -161,8 +161,6 @@ class GameScreen:
 
         self.animar_busqueda()
 
-        self.manejar_mouse_mantenido()
-
 
 
     def handle_events(self, event):
@@ -174,46 +172,10 @@ class GameScreen:
         if result:
             return result
         
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        self.ui_actions.on_cell_pressed(event)
 
-            celda = self.get_celda(event.pos)
-
-            if celda:
-                row, col = celda
-
-                if event.button == 1:
-                    if self.selected_button == "init":
-                        if self.pos_init:
-                            prev_row, prev_col = self.pos_init
-                            self.matriz_astar[prev_row][prev_col] = 0
-                        self.pos_init = (row, col)
-                        self.matriz_astar[row][col] = 1
-
-                    elif self.selected_button == "goal":
-                        if self.pos_goal:
-                            prev_row, prev_col = self.pos_goal
-                            self.matriz_astar[prev_row][prev_col] = 0
-
-                        self.pos_goal = (row, col)
-                        self.matriz_astar[row][col] = 2
-                    elif self.selected_button == "obstacle":
-                        self.matriz_astar[row][col] = -1
-
-                elif event.button == 3:
-                    if self.matriz_astar[row][col] == 3:
-                        return None, None
-                    
-                    self.matriz_astar[row][col] = 0
-
-                    # Limpiar posiciones guardadas si se borran
-                    if self.pos_init == (row, col):
-                        self.pos_init = None
-
-                    if self.pos_goal == (row, col):
-                        self.pos_goal = None
-
-        return None, None
-
+        return self.ui_actions.on_cell_actions(event)
+    
     def dibujar_mapa(self):
         mapa = 620
         tam_celdas = mapa // self.dim
@@ -253,30 +215,6 @@ class GameScreen:
             for x, y in lista_astar:
                 self.matriz_astar[x][y] = 3  # Marcar el camino encontrado (puedes usar otro valor para diferenciarlo)
 
-
-
-    def get_celda(self, pos):
-        x, y = pos
-        tam = self.get_tam_celda()
-
-        # verificar si está dentro del grid
-        if not (
-            self.grid_origin_x <= x < self.grid_origin_x + self.mapa_size and
-            self.grid_origin_y <= y < self.grid_origin_y + self.mapa_size
-        ):
-            return None
-
-        col = (x - self.grid_origin_x) // tam
-        row = (y - self.grid_origin_y) // tam
-
-        if 0 <= row < self.dim and 0 <= col < self.dim:
-            return int(row), int(col)
-
-        return None
-    
-    def get_tam_celda(self):
-        return self.mapa_size // self.dim
-    
     def animar_busqueda(self):
         if self.animando and self.generador_astar:
 
@@ -324,25 +262,3 @@ class GameScreen:
                 x, y = self.lista_animacion.pop(0)
                 self.matriz_astar[x][y] = 3
                 self.timer_animacion = ahora
-
-    def manejar_mouse_mantenido(self):
-        botones = pygame.mouse.get_pressed()
-
-        if botones[0]:  # Si se mantiene presionado el botón izquierdo del mouse
-            celda = self.get_celda(pygame.mouse.get_pos())
-
-            if celda:
-                row, col = celda
-
-                if self.selected_button == "obstacle":
-                    self.matriz_astar[row][col] = -1
-        
-        if botones[2]:
-            celda = self.get_celda(pygame.mouse.get_pos())
-
-            if celda:
-                row, col = celda
-
-                # Eliminamos elementos de la casilla seleccionada
-                if self.matriz_astar[row][col] not in (1, 2):  
-                    self.matriz_astar[row][col] = 0

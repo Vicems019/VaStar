@@ -2,6 +2,7 @@ import pygame
 
 from ui.colors import Colors
 from ui.popup import Popup
+from core.errors import DimensionesError
 
 WIDTH = 1280
 HEIGHT = 720
@@ -35,8 +36,8 @@ class MenuScreen:
                             dim = int(self.dim_text)
                             return ("game", [dim])
                         else:
-                            raise ValueError("Dimensiones inválidas")
-                    except ValueError:
+                            raise DimensionesError("Dimensiones inválidas") # errores de dimensión
+                    except Exception:
                         self.popup.error_active = True
             if self.popup.error_active:
                 self.popup.handle_events(event)

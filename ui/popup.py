@@ -24,8 +24,8 @@ class Popup:
         )
 
         self.paleta_items = [
-            (Colors.GREEN_LIGHT, "Inicio"),
-            (Colors.BLUE_LIGHT, "Final"),
+            (Colors.BLUE_LIGHT, "Inicio"),
+            (Colors.GREEN_LIGHT, "Final"),
             (Colors.RED, "Recorrido"),
             (Colors.YELLOW_LIGHT, "Camino más rápido"),
             (Colors.GRAY, "Obstáculo")

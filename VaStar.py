@@ -12,6 +12,10 @@ HEIGHT = 720
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("VaStar - Visualizador A*")
 
+# Cargar el icono
+icon = pygame.image.load("assets/icons/desktop_icon.png")
+pygame.display.set_icon(icon)
+
 clock = pygame.time.Clock()
 
 # Fuente robótica
