@@ -60,7 +60,9 @@ class GameScreen:
             base_color=Colors.BLUE,
             hover_color=Colors.BLUE_DARK,
             border_radius=10,
-            border=4
+            border=4,
+            text="Inicio",
+            font=self.font_little
         )
 
         self.goal_button = Button(
@@ -68,15 +70,19 @@ class GameScreen:
             base_color=Colors.GREEN,
             hover_color=Colors.GREEN_DARK,
             border_radius=10,
-            border=4
+            border=4,
+            text="Meta",
+            font=self.font_little
         )
 
         self.obstacle_button = Button(
-            rect=(WIDTH - 400, 360, 160, 160),
+            rect=(WIDTH - 400, 360, 200, 160),
             base_color=Colors.GRAY,
             hover_color=Colors.GRAY_DARK,
             border_radius=10,
-            border=4
+            border=4,
+            text="Obstaculo",
+            font=self.font_little
         )
 
         self.restart_button = Button(
